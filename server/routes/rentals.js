@@ -24,8 +24,7 @@ router.get('/:id', async (req, res) => {
     res.json(rental);
   }
   catch (error) {
-    console.error(error.message);
-    res.status(404).send({ errors: [{detail:'Rental Not Found'}]});
+    res.status(400).json({ error: 'Rental Not Found'});
   }
 });
 

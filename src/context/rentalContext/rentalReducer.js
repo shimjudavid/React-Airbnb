@@ -1,6 +1,8 @@
 import {
   FETCH_RENTALS,
   FETCH_RENTAL_BY_ID,
+  RENTAL_ERROR,
+
 } from '../types';
 
 export default (state, action) => {
@@ -10,24 +12,22 @@ export default (state, action) => {
         return {
           ...state,
           rentals: action.payload,
+          rental: null,
           loading: false
         }
+
+      case RENTAL_ERROR:
+      return {
+        ...state,
+        error:action.payload
+      }
 
     case FETCH_RENTAL_BY_ID:
           return {
             ...state,
             rental: action.payload,
             loading: false
-
           }
-
-
-        case "CLEAR_USERS":
-            return {
-              ...state,
-              users: [],
-              loading: false
-            }
 
 
 
