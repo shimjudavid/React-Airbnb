@@ -1,99 +1,69 @@
-import React, { useReducer} from 'react'
+import React, { useReducer } from 'react'
+import axios from 'axios'
 import RentalContext from './rentalContext';
 import RentalReducer from './rentalReducer';
 import {
   FETCH_RENTALS,
   FETCH_RENTAL_BY_ID,
+  RENTAL_ERROR,
+
 } from '../types';
 
 const RentalState = props => {
   const initialState = {
     loading: true,
-    rentals: [],
-    rental: {},
+    rentals: null,
+    rental: null,
+    error: null
   }
-
-  const initialRentals = [
-    {
-      id: "1",
-      title: 'Water-Front',
-      city: 'San Francisco',
-      street: 'Lombard Street',
-      category: 'apartment',
-      image: 'http://via.placeholder.com/350x250',
-      bedrooms: 3,
-      description: 'Very Nice apartment',
-      dailyRate: '89.00',
-      shared: false,
-      createdAt: '24/23/2019'
-    },
-    {
-      id: "2",
-      title: 'Hill View',
-      city: 'New York',
-      street: 'Times Square',
-      category: 'house',
-      image: 'http://via.placeholder.com/350x250',
-      bedrooms: 3,
-      description: 'Very Nice apartment',
-      dailyRate: '34.00',
-      shared: true,
-      createdAt: '24/23/2019'
-    },
-    {
-      id: "3",
-      title: 'Marvelous Condo',
-      city: 'Portland',
-      street: '82nd Avenue',
-      category: 'condo',
-      image: 'http://via.placeholder.com/350x250',
-      bedrooms: 3,
-      description: 'Very Nice apartment',
-      dailyRate: '25.00',
-      shared: false,
-      createdAt: '24/23/2019'
-    },
-    {
-      id: "4",
-      title: 'Valley View',
-      city: 'Phoenix',
-      street: 'Charter Oak Rd',
-      category: 'house',
-      image: 'http://via.placeholder.com/350x250',
-      bedrooms: 3,
-      description: 'Very Nice apartment',
-      dailyRate: '45.00',
-      shared: true,
-      createdAt: '24/23/2019'
-    }
-  ];
-
-
-
   const [state, dispatch] = useReducer(RentalReducer, initialState);
 
-  const fetchRentals = () => {
-    dispatch({
-      type: FETCH_RENTALS ,
-      payload: initialRentals
-    })
+  const fetchRentals = async () => {
+    try {
+      const res = await axios.get('/api/v1/rentals');
+      dispatch({
+        type: FETCH_RENTALS ,
+        payload: res.data
+      })
+    }
+    catch (error) {
+      dispatch({
+        type: RENTAL_ERROR ,
+        payload: error.errors
+      })
+    }
   }
 
-  const fetchRentalByid = (id) => {
-    const selected_rental = initialRentals.find((rental) => rental.id === id);
-    debugger;
-    dispatch({
-      type: FETCH_RENTAL_BY_ID ,
-      payload: selected_rental
-    })
+  const fetchRentalByid = async (id) => {
+
+    try {
+      const res = await axios.get(`/api/v1/rentals/${id}`);
+        dispatch({
+          type: FETCH_RENTAL_BY_ID ,
+          payload: res.data
+        })
+    }
+    catch (error) {
+      dispatch({
+        type: RENTAL_ERROR ,
+        payload: error.message
+      })
+    }
   }
+
+
+
+
+
 
   return <RentalContext.Provider value={{
     loading: state.loading,
     rentals: state.rentals,
     rental: state.rental,
+    error: state.error,
     fetchRentals,
-    fetchRentalByid,
+    fetchRentalByid
+
 
   }}>
     {props.children}

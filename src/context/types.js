@@ -1,2 +1,6 @@
 export const FETCH_RENTALS = 'FETCH_RENTALS';
 export const FETCH_RENTAL_BY_ID = 'FETCH_RENTAL_BY_ID';
+export const RENTAL_ERROR = 'RENTAL_ERROR';
+
+
+

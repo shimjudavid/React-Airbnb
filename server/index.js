@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require("cors");
 const connectDB = require('./config/db');
 const app = express();
 const FakeDB = require('./fake-db');
@@ -19,6 +20,12 @@ This is a built-in middleware function in Express.
 It parses incoming requests with JSON payloads and is based on body-parser.
 This middleware is available in Express v4.16.0 onwards.
 */
+app.use(cors({
+  origin: ["http://localhost:3000"],
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 app.use(express.json({extended: false}));
 
 // Define routes
